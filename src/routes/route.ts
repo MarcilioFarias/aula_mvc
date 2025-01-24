@@ -1,22 +1,25 @@
 import express from "express";
-import { createUser } from "../services/user";
+import { createUser, listUsers } from "../services/user";
 
-const mainRounte = express.Router();
+const mainRoute = express.Router();
 
-mainRounte.get('/ping', (req, res) => {
+mainRoute.get('/ping', (req, res) => {
     res.json('pong');
 });
 
-mainRounte.post('/newuser', async (req, res) => {
+mainRoute.post('/newuser', async (req, res) => {
     
     const newUser = await createUser({
         email: req.body.email,
         password: req.body.password
-    })
+    });
     res.status(201).json(newUser);
     
 });
 
+mainRoute.post('/listusers', async (req, res)=>{
+    const list = await listUsers(req.query.email as string);
+    res.json(list);
+})
 
-
-export default mainRounte;
+export default mainRoute;
