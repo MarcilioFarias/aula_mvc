@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, listUsers } from "../services/user";
+import { createUser, listUsers, listAllUsers, updateUser, deleteUser } from "../services/user";
 
 const mainRoute = express.Router();
 
@@ -17,9 +17,37 @@ mainRoute.post('/newuser', async (req, res) => {
     
 });
 
-mainRoute.post('/listusers', async (req, res)=>{
-    const list = await listUsers(req.query.email as string);
-    res.json(list);
-})
+mainRoute.get('/listuser', async (req, res)=>{
+    const listUser = await listUsers(req.query.email as string);
+    
+    if(listUser) {
+        res.status(200).json({user: listUser});
+    } else {
+        res.status(404).json({message: 'User not found'});
+    }
+});
+
+mainRoute.get('/listall', async (req, res) => {
+    const allUsers = await listAllUsers();
+    res.status(200).json({allUsers});
+});
+
+mainRoute.post('/updaterole', async (req, res)=>{
+    const updateRole = await updateUser(req.body.email);
+    if(updateRole) {
+        res.status(201).json({user: updateRole});        
+    } else {
+        res.status(404).json({message: 'User not found'});
+    }
+});
+
+mainRoute.delete('/deleteuser', async (req, res) => {
+    const deleteUserResult = await deleteUser(req.body.email);
+    if(deleteUserResult) {
+        res.status(204).json({message: 'User deleted'});
+    } else {
+        res.status(404).json({message: 'User not found'});
+    }          
+});
 
 export default mainRoute;
