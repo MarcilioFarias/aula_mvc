@@ -2,24 +2,32 @@ import { prisma } from '../lib/prisma';
 import { Prisma } from '@prisma/client';
 
 
+export const loginUser = async (email: string, password: string) => {
+    if(email && password) {
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email,
+                password: password
+            }
+        }); 
+        return user;
+    } 
+    return false;
+     
+};
+export const createUserToken = (user:any) => {
+    return 'created token';
+}
+
+export const localAuthentication = (email: string, password: string)=>{    
+}
 export const createUser = async (data: Prisma.UserCreateInput ) => {
-    if(!data.email || !data.password) {
-        return false;
-    } else {
-        try {
+    if(!data.email && !data.password && data.loginUser) {
+                return false;
+        } else {
             const newUser = await prisma.user.create({ data });
             return newUser;
-        } catch (error) {
-            return false;
-        }
-    }
-    
-    // try { 
-    //     const newUser = await prisma.user.create({ data });
-    //     return newUser;
-    // } catch (error) {
-    //     return false;
-    // }    
+        }       
 }
 
 export const listAllUsers = async () => {

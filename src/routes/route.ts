@@ -1,20 +1,27 @@
 import express from "express";
-import { createUser, listUsers, listAllUsers, updateUser, deleteUser } from "../services/user";
+import { createUser, listUsers, listAllUsers, updateUser, deleteUser, loginUser } from "../services/user";
+import { localAuth } from "../middleware/auth";
+import { privateRoute } from "../middleware/local.auth";
+import { localStratgyAuth } from "../lib/user";
 
 const mainRoute = express.Router();
 
-mainRoute.get('/ping', (req, res) => {
+mainRoute.get('/ping', localAuth, (req, res) => {
     res.json('pong');
 });
 
-mainRoute.post('/newuser', async (req, res) => {
+mainRoute.post('/newuser', privateRoute, async (req, res) => {
     
     const newUser = await createUser({
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        loginUser: req.body.login
     });
-    res.status(201).json(newUser);
-    
+    if(!newUser) {
+        res.status(400).json({message: 'Error in creating user'});
+    } else {
+        res.status(201).json(newUser);
+    }     
 });
 
 mainRoute.get('/listuser', async (req, res)=>{
@@ -48,6 +55,22 @@ mainRoute.delete('/deleteuser', async (req, res) => {
     } else {
         res.status(404).json({message: 'User not found'});
     }          
+});
+
+mainRoute.post('/login', async (req, res) => {
+    const checkLogin = await loginUser(req.body.login, req.body.password);
+    if(checkLogin) {
+        res.status(200).json({message: 'Login successful'});
+    } else {
+        res.status(403).json({message: 'Login failed'});
+    }
+});
+
+mainRoute.post('/loginauth', localStratgyAuth, async (req, res)=>{
+    res.json({
+        user: req.login,
+        auth: req.authInfo
+    });
 });
 
 export default mainRoute;
