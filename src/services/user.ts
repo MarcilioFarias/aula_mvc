@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import { Prisma } from '@prisma/client';
+import { User } from '../types/types.user';
 
 
 export const loginUser = async (email: string, password: string) => {
@@ -15,11 +16,20 @@ export const loginUser = async (email: string, password: string) => {
     return false;
      
 };
-export const createUserToken = (user:any) => {
-    return 'created token';
+export const createUserToken = (user:User) => {
+    return '00011010101010';
 }
 
-export const localAuthentication = (email: string, password: string)=>{    
+export const findUserByEmailAndPassword = async (email: string, password: string)=>{ 
+    // check DB for user
+    if(email === 'fulano@test.com' && password === '1234'){
+        const user: User = {
+            id: 1,
+            name: 'Fulano'
+        }
+        return user;
+    }
+    return null;
 }
 export const createUser = async (data: Prisma.UserCreateInput ) => {
     if(!data.email && !data.password && data.loginUser) {

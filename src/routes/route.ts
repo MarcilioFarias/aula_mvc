@@ -66,9 +66,9 @@ mainRoute.post('/login', async (req, res) => {
     }
 });
 
-mainRoute.post('/loginauth', localStratgyAuth, async (req, res)=>{
+mainRoute.post('/loginauth', localStratgyAuth ,async (req, res)=>{
     res.json({
-        user: req.login,
+        user: req.user,
         auth: req.authInfo
     });
 });
