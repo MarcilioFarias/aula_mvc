@@ -20,6 +20,18 @@ export const createUserToken = (user:User) => {
     return '00011010101010';
 }
 
+export const findUserByToken = async (token: string)=>{
+    //check database
+    if(token === '1234'){
+        const user: User = {
+            id: 3,
+            name: 'Ciclano'
+        }
+        return user;
+    }
+    return null;
+}
+
 export const findUserByEmailAndPassword = async (email: string, password: string)=>{ 
     // check DB for user
     if(email === 'fulano@test.com' && password === '1234'){

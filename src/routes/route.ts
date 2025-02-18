@@ -3,6 +3,7 @@ import { createUser, listUsers, listAllUsers, updateUser, deleteUser, loginUser 
 import { localAuth } from "../middleware/auth";
 import { privateRoute } from "../middleware/local.auth";
 import { localStratgyAuth } from "../lib/user";
+import { bearerAuth } from "../lib/passort-bearer";
 
 const mainRoute = express.Router();
 
@@ -72,5 +73,9 @@ mainRoute.post('/loginauth', localStratgyAuth ,async (req, res)=>{
         auth: req.authInfo
     });
 });
+
+mainRoute.get('/private', bearerAuth ,(req, res)=>{
+    res.json({message: 'Accessed'});
+})
 
 export default mainRoute;

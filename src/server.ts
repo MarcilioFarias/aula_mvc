@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import passport from 'passport';
 import mainRoute from './routes/route';
 import { localStrategy } from './lib/user';
+import { bearerStrategy } from './lib/passort-bearer';
 
 const server = express();
 
@@ -12,6 +13,7 @@ server.use(helmet());
 server.use(cors());
 server.use(express.urlencoded({ extended: true }));
 
+passport.use(bearerStrategy);
 passport.use(localStrategy);
 server.use(passport.initialize());
 
@@ -21,5 +23,5 @@ server.get('/', (req, res)=>{
 });
 
 server.listen(3000,()=>{
-    console.log('Server is running on port 3000');
+    console.log('http://localhost:3000');
 });
