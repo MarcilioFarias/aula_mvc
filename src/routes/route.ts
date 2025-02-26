@@ -4,6 +4,7 @@ import { localAuth } from "../middleware/auth";
 import { privateRoute } from "../middleware/local.auth";
 import { localStratgyAuth } from "../lib/user";
 import { bearerAuth } from "../lib/passort-bearer";
+import { jwtStrategyAuth } from "../lib/passport-jwt";
 
 const mainRoute = express.Router();
 
@@ -77,5 +78,9 @@ mainRoute.post('/loginauth', localStratgyAuth ,async (req, res)=>{
 mainRoute.get('/private', bearerAuth ,(req, res)=>{
     res.json({message: 'Accessed'});
 })
+
+mainRoute.get('/privatejwt', jwtStrategyAuth, (req, res)=>{
+    res.json({message: 'Accessed JWT'});
+});
 
 export default mainRoute;

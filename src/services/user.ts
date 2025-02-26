@@ -1,7 +1,7 @@
 import { prisma } from '../lib/prisma';
 import { Prisma } from '@prisma/client';
 import { User } from '../types/types.user';
-
+import jwt from 'jsonwebtoken';
 
 export const loginUser = async (email: string, password: string) => {
     if(email && password) {
@@ -20,11 +20,30 @@ export const createUserToken = (user:User) => {
     return '00011010101010';
 }
 
+export const createUserJwt = (user:User) => {
+    const payload = {
+        id: user.id
+    }
+    return jwt.sign(payload, process.env.JWT_SECRET as string, {
+        expiresIn: '1 minute'});
+}
+
+export const findUserById = (id: string) => {
+    //consultar DB
+    if(id === '1'){
+        const user: User = {
+            id: '1',
+            name: 'Fulano'
+        }
+        return user;
+    } return null;
+};
+
 export const findUserByToken = async (token: string)=>{
     //check database
     if(token === '1234'){
         const user: User = {
-            id: 3,
+            id: '3',
             name: 'Ciclano'
         }
         return user;
@@ -36,13 +55,14 @@ export const findUserByEmailAndPassword = async (email: string, password: string
     // check DB for user
     if(email === 'fulano@test.com' && password === '1234'){
         const user: User = {
-            id: 1,
+            id: '1',
             name: 'Fulano'
         }
         return user;
     }
     return null;
 }
+
 export const createUser = async (data: Prisma.UserCreateInput ) => {
     if(!data.email && !data.password && data.loginUser) {
                 return false;
